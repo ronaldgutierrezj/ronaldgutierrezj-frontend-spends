@@ -20,7 +20,7 @@ const SingleReport = ({reports,match}) => {
       <h2>{report?.details}</h2>
       <h2>{report?.date}</h2>
       <Link to="/">
-        <button>Go Back</button>
+        <button>Go  Back</button>
       </Link>
     </div>
   );
