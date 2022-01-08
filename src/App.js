@@ -1,4 +1,5 @@
 import AllReports from "./pages/AllReports";
+import Available from "./components/available";
 import SingleReport from "./pages/SingleReport";
 import Form from "./pages/Form";
 
@@ -11,6 +12,7 @@ function App(props) {
   const h1 = {
     textAlign: "center",
     margin: "10px",
+  
   };
 
   const button = {
@@ -91,6 +93,7 @@ useEffect(() => {
   return (
     <div className="App">
      <h1 style={h1}>My Spends</h1>
+     <Available reports = {reports}/>
      <Link to="/new"><button style={button}>Create New Report</button></Link>
       <Switch>
         <Route
