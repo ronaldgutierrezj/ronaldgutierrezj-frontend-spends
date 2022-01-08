@@ -4,7 +4,7 @@ import Form from "./pages/Form";
 
 import React, { useState, useEffect } from "react";
 
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Link } from "react-router-dom";
 
 function App(props) {
 
@@ -13,11 +13,24 @@ function App(props) {
     margin: "10px",
   };
 
+  const button = {
+    backgroundColor: "navy",
+    display: "block",
+    margin: "auto",
+  };
+
   const url = "https://backend-spends.herokuapp.com/spends/";
 
   const [reports, setReports] = useState([]);
 
+  const nullSpend = {
+    concept: "",
+    amount: "",
+    details: "",
+    date: "",
+  };
 
+  const [targetSpend, setTargetSpend] = useState(nullSpend);
   //////////////
 // Functions
 //////////////
@@ -28,6 +41,43 @@ const getSpends = async () => {
   setReports(data);
 };
 
+const addSpends = async (newSpend) => {
+  await fetch(url, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newSpend),
+  });
+  getSpends();
+};
+
+
+const getTargetSpend = (spend) => {
+  setTargetSpend(spend);
+  props.history.push("/edit");
+};
+
+const updateSpend = async (spend) => {
+  await fetch(url + spend.id + "/", {
+    method: "put",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(spend),
+  });
+
+  getSpends();
+};
+
+const deleteSpend = async (spend) => {
+  await fetch(url + spend.id + "/", {
+    method: "delete",
+  });
+
+  getSpends();
+  props.history.push("/");
+};
 //////////////
 // useEffects
 //////////////
@@ -41,6 +91,7 @@ useEffect(() => {
   return (
     <div className="App">
      <h1 style={h1}>My Spends</h1>
+     <Link to="/new"><button style={button}>Create New Report</button></Link>
       <Switch>
         <Route
           exact
@@ -50,16 +101,29 @@ useEffect(() => {
         <Route
           path="/report/:id"
           render={(routerProps) => (
-            <SingleReport {...routerProps} reports={reports} />
+            <SingleReport {...routerProps} 
+            reports={reports} 
+            edit={getTargetSpend}
+            deleteSpend={deleteSpend}/>
           )}
         />
         <Route
           path="/new"
-          render={(routerProps) => <Form {...routerProps} />}
+          render={(routerProps) => (
+          <Form 
+            {...routerProps} 
+            initialSpend={nullSpend}
+            handleSubmit={addSpends}
+            buttonLabel="Add report"
+          />)}
         />
         <Route
           path="/edit"
-          render={(routerProps) => <Form {...routerProps} />}
+          render={(routerProps) => (
+          <Form {...routerProps} 
+          initialSpend={targetSpend}
+          handleSubmit={updateSpend}
+          buttonLabel="update Report"/>)}
         />
       </Switch> 
 

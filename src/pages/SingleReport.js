@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const SingleReport = ({reports,match}) => {
+const SingleReport = ({reports,match,edit, deleteSpend}) => {
 
   const id = parseInt(match.params.id)
 
@@ -19,8 +19,10 @@ const SingleReport = ({reports,match}) => {
       <h2>{report?.amount}</h2>
       <h2>{report?.details}</h2>
       <h2>{report?.date}</h2>
+      <button onClick={(event) => edit(report)}>Edit</button>
+      <button onClick={(event) => deleteSpend(report)}>Delete</button>
       <Link to="/">
-        <button>Go  Back</button>
+        <button>Go Back</button>
       </Link>
     </div>
   );
